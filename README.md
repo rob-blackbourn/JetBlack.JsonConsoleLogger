@@ -10,6 +10,10 @@ It was originally written for .Net services running in docker to provide structu
 
 At present the public interface provided by the Microsoft logging framework passes an important parameter as an internal class. Reflection is used in order to access this parameters. **If the underlying implementation is changed this logger will break.**
 
+## Installation
+
+The package can be installed from [nuget](https://www.nuget.org/packages/JetBlack.JsonConsoleLogger/).
+
 ## Usage
 
 This is a modification of the logger in `Microsoft.Extensions.Logging.Console`, and can be used
