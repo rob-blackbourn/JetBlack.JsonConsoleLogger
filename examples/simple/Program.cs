@@ -26,7 +26,7 @@ namespace Example
 
             logger.LogTrace("This is a {LevelName} message", "TRACE");
             logger.LogDebug("This is a {LevelName} message", "DEBUG");
-            logger.LogInformation("This is an {LevelName} message", "INFO");
+            logger.LogInformation("This is an {LevelName} message with a {Date}", "INFO", DateTime.Now);
             logger.LogWarning("This is a {LevelName} message", "WARN");
 
             try

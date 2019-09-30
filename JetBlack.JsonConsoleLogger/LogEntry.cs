@@ -4,16 +4,18 @@ using System.Collections.Generic;
 
 namespace JetBlack.JsonConsoleLogger
 {
-    internal readonly struct LogMessageEntry
+    internal readonly struct LogEntry
     {
-        public LogMessageEntry(
+        public LogEntry(
             string name,
             string message,
             string? timeStamp,
             string levelString,
             bool logAsError,
             IDictionary<string, object> parameters,
-            IDictionary<string, object?>? exception)
+            IDictionary<string, object?>? exception,
+            IList<string>? scopes,
+            JsonConsoleLoggerOptions? options)
         {
             Name = name;
             TimeStamp = timeStamp;
@@ -22,6 +24,8 @@ namespace JetBlack.JsonConsoleLogger
             LogAsError = logAsError;
             Parameters = parameters;
             Exception = exception;
+            Scopes = scopes;
+            Options = options;
         }
 
         public readonly string Name;
@@ -31,5 +35,7 @@ namespace JetBlack.JsonConsoleLogger
         public readonly bool LogAsError;
         public readonly IDictionary<string, object>? Parameters;
         public readonly IDictionary<string, object?>? Exception;
+        public readonly IList<string>? Scopes;
+        public readonly JsonConsoleLoggerOptions? Options;
     }
 }

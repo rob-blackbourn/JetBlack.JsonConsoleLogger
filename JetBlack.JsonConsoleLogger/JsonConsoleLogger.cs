@@ -14,10 +14,12 @@ namespace JetBlack.JsonConsoleLogger
         private readonly string _name;
         private readonly JsonConsoleLoggerProcessor _queueProcessor;
 
-        internal JsonConsoleLogger(string name, JsonConsoleLoggerProcessor loggerProcessor)
+        internal JsonConsoleLogger(string? name, JsonConsoleLoggerProcessor? loggerProcessor)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
+            if (loggerProcessor == null)
+                throw new ArgumentNullException(nameof(loggerProcessor));
 
             _name = name;
             _queueProcessor = loggerProcessor;
@@ -48,20 +50,22 @@ namespace JetBlack.JsonConsoleLogger
             _queueProcessor.EnqueueMessage(entry);
         }
 
-        private LogMessageEntry CreateDefaultLogMessage(LogLevel logLevel, string logName, int eventId, string message, IDictionary<string, object> parameters, Exception exception)
+        private LogEntry CreateDefaultLogMessage(LogLevel logLevel, string logName, int eventId, string message, IDictionary<string, object> parameters, Exception exception)
         {
             var logLevelString = GetLogLevelString(logLevel);
             var scopes = GetScopeInformation();
             var exceptionDetails = GetExceptionDetails(exception);
 
-            return new LogMessageEntry(
+            return new LogEntry(
                 _name,
                 message,
                 GetFormattedTimestamp(),
                 logLevelString,
                 logLevel >= (Options?.LogToStandardErrorThreshold ?? LogLevel.Information),
                 parameters,
-                exceptionDetails
+                exceptionDetails,
+                scopes,
+                Options
             );
         }
 
@@ -80,22 +84,22 @@ namespace JetBlack.JsonConsoleLogger
             return DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
         }
 
-        private static string GetLogLevelString(LogLevel logLevel)
+        private string GetLogLevelString(LogLevel logLevel)
         {
             switch (logLevel)
             {
                 case LogLevel.Trace:
-                    return "trce";
+                    return Options.GetName(Names.Trace);
                 case LogLevel.Debug:
-                    return "dbug";
+                    return Options.GetName(Names.Debug);
                 case LogLevel.Information:
-                    return "info";
+                    return Options.GetName(Names.Information);
                 case LogLevel.Warning:
-                    return "warn";
+                    return Options.GetName(Names.Warning);
                 case LogLevel.Error:
-                    return "fail";
+                    return Options.GetName(Names.Error);
                 case LogLevel.Critical:
-                    return "crit";
+                    return Options.GetName(Names.Critical);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(logLevel));
             }
@@ -119,9 +123,9 @@ namespace JetBlack.JsonConsoleLogger
 
             return new Dictionary<string, object?>
             {
-                { "message", exception.Message },
-                { "stackTrace", GetStackTrace(exception) },
-                { "innerException", GetExceptionDetails(exception.InnerException) }
+                { Options.GetName(Names.ExceptionMessage), exception.Message },
+                { Options.GetName(Names.StackTrace), GetStackTrace(exception) },
+                { Options.GetName(Names.InnerException), GetExceptionDetails(exception.InnerException) }
             };
         }
 
@@ -135,10 +139,10 @@ namespace JetBlack.JsonConsoleLogger
                 frames.Add(
                     new Dictionary<string, object>
                     {
-                        { "lineNumber", frame.GetFileLineNumber() },
-                        { "columnNumber", frame.GetFileColumnNumber() },
-                        { "file", frame.GetFileName() },
-                        { "method", frame.GetMethod().ToString() }
+                        { Options.GetName(Names.LineNumber), frame.GetFileLineNumber() },
+                        { Options.GetName(Names.ColumnNumber), frame.GetFileColumnNumber() },
+                        { Options.GetName(Names.FileName), frame.GetFileName() },
+                        { Options.GetName(Names.Method), frame.GetMethod().ToString() }
                     }
                 );
             }

@@ -13,7 +13,7 @@ namespace JetBlack.JsonConsoleLogger
     {
         private const int MaxQueuedMessages = 1024;
 
-        private readonly BlockingCollection<LogMessageEntry> _messageQueue = new BlockingCollection<LogMessageEntry>(MaxQueuedMessages);
+        private readonly BlockingCollection<LogEntry> _messageQueue = new BlockingCollection<LogEntry>(MaxQueuedMessages);
         private readonly Thread _outputThread;
 
         public IConsole? Console;
@@ -30,7 +30,7 @@ namespace JetBlack.JsonConsoleLogger
             _outputThread.Start();
         }
 
-        public virtual void EnqueueMessage(LogMessageEntry message)
+        public virtual void EnqueueMessage(LogEntry message)
         {
             if (!_messageQueue.IsAddingCompleted)
             {
@@ -50,21 +50,23 @@ namespace JetBlack.JsonConsoleLogger
             catch (Exception) { }
         }
 
-        internal virtual void WriteMessage(LogMessageEntry logMessageEntry)
+        internal virtual void WriteMessage(LogEntry logEntry)
         {
-            var console = logMessageEntry.LogAsError ? ErrorConsole : Console;
-
+            var console = logEntry.LogAsError ? ErrorConsole : Console;
 
             var body = new Dictionary<string, object?>
             {
-                { "name", logMessageEntry.Name},
-                { "level", logMessageEntry.LevelString},
-                { "message", logMessageEntry.Message},
-                { "parameters", logMessageEntry.Parameters},
-                { "exception", logMessageEntry.Exception}
+                { logEntry.Options.GetName(Names.Name), logEntry.Name},
+                { logEntry.Options.GetName(Names.Level), logEntry.LevelString},
+                { logEntry.Options.GetName(Names.Message), logEntry.Message},
+                { logEntry.Options.GetName(Names.Parameters), logEntry.Parameters},
             };
-            if (logMessageEntry.TimeStamp != null)
-                body["timestamp"] = logMessageEntry.TimeStamp;
+            if (logEntry.Exception != null)
+                body[logEntry.Options.GetName(Names.Exception)] = logEntry.Exception;
+            if (logEntry.TimeStamp != null)
+                body[logEntry.Options.GetName(Names.Timestamp)] = logEntry.TimeStamp;
+            if (logEntry.Scopes != null)
+                body[logEntry.Options.GetName(Names.Scopes)] = logEntry.TimeStamp;
 
             var message = JsonConvert.SerializeObject(body);
 
