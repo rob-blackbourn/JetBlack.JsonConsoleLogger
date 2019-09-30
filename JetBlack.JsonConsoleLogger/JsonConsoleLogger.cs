@@ -61,7 +61,6 @@ namespace JetBlack.JsonConsoleLogger
                 message,
                 GetFormattedTimestamp(),
                 logLevelString,
-                logLevel >= (Options?.LogToStandardErrorThreshold ?? LogLevel.Information),
                 parameters,
                 exceptionDetails,
                 scopes,

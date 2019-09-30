@@ -2,8 +2,6 @@
 
 using System.Collections.Generic;
 
-using Microsoft.Extensions.Logging;
-
 namespace JetBlack.JsonConsoleLogger
 {
     public enum TimestampStyle
@@ -15,9 +13,9 @@ namespace JetBlack.JsonConsoleLogger
 
     public class JsonConsoleLoggerOptions
     {
-        public bool IncludeScopes { get; set; }
-        public LogLevel LogToStandardErrorThreshold { get; set; } = LogLevel.None;
+        public bool IncludeScopes { get; set; } = false;
+        public bool LogToStandardError { get; set; } = false;
         public TimestampStyle Timestamp { get; set; } = TimestampStyle.Utc;
-        public IDictionary<string, string?>? Names { get; set; }
+        public IDictionary<string, string?>? Names { get; set; } = null;
     }
 }

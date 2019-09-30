@@ -52,7 +52,7 @@ namespace JetBlack.JsonConsoleLogger
 
         internal virtual void WriteMessage(LogEntry logEntry)
         {
-            var console = logEntry.LogAsError ? ErrorConsole : Console;
+            var console = logEntry.Options?.LogToStandardError == true ? ErrorConsole : Console;
 
             var body = new Dictionary<string, object?>
             {
