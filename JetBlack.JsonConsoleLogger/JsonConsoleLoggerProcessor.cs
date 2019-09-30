@@ -52,43 +52,45 @@ namespace JetBlack.JsonConsoleLogger
 
         internal void WriteMessage(LogEntry logEntry)
         {
-            try
-            {
-                TryWriteMessage(logEntry, true);
-            }
-            catch
-            {
+            if (!TryWriteMessage(logEntry, true))
                 TryWriteMessage(logEntry, false);
-            }
         }
 
-        private void TryWriteMessage(LogEntry logEntry, bool includeParameters)
+        private bool TryWriteMessage(LogEntry logEntry, bool includeParameters)
         {
-            var console = logEntry.Options?.LogToStdErr == true ? ErrorConsole : Console;
+            try
+            {
+                var console = logEntry.Options?.LogToStdErr == true ? ErrorConsole : Console;
 
-            var body = new Dictionary<string, object?>
+                var body = new Dictionary<string, object?>
             {
                 { logEntry.Options.GetName(Names.Name), logEntry.Name},
                 { logEntry.Options.GetName(Names.Level), logEntry.LevelString},
                 { logEntry.Options.GetName(Names.Message), logEntry.Message}
             };
 
-            if (includeParameters)
-                body[logEntry.Options.GetName(Names.Parameters)] = logEntry.Parameters;
-            else
-                body[logEntry.Options.GetName(Names.Parameters)] = "failed to write parameters";
+                if (includeParameters)
+                    body[logEntry.Options.GetName(Names.Parameters)] = logEntry.Parameters;
+                else
+                    body[logEntry.Options.GetName(Names.Parameters)] = "failed to write parameters";
 
-            if (logEntry.Exception != null)
-                body[logEntry.Options.GetName(Names.Exception)] = logEntry.Exception;
-            if (logEntry.TimeStamp != null)
-                body[logEntry.Options.GetName(Names.Timestamp)] = logEntry.TimeStamp;
-            if (logEntry.Scopes != null)
-                body[logEntry.Options.GetName(Names.Scopes)] = logEntry.TimeStamp;
+                if (logEntry.Exception != null)
+                    body[logEntry.Options.GetName(Names.Exception)] = logEntry.Exception;
+                if (logEntry.TimeStamp != null)
+                    body[logEntry.Options.GetName(Names.Timestamp)] = logEntry.TimeStamp;
+                if (logEntry.Scopes != null)
+                    body[logEntry.Options.GetName(Names.Scopes)] = logEntry.TimeStamp;
 
-            var message = JsonConvert.SerializeObject(body);
+                var message = JsonConvert.SerializeObject(body);
 
-            console?.WriteLine(message);
-            console?.Flush();
+                console?.WriteLine(message);
+                console?.Flush();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void ProcessLogQueue()
