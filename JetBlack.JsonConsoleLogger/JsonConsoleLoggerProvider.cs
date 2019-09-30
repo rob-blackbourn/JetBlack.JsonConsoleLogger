@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace JetBlack.JsonConsoleLogger
 {
-    [ProviderAlias("JsonConsoleLogger")]
+    [ProviderAlias("JsonConsole")]
     public class JsonConsoleLoggerProvider : ILoggerProvider, ISupportExternalScope
     {
         private readonly IOptionsMonitor<JsonConsoleLoggerOptions> _options;

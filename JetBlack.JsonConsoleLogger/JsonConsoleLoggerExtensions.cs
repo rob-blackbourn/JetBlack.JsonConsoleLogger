@@ -11,10 +11,6 @@ namespace JetBlack.JsonConsoleLogger
 {
     public static class JsonConsoleLoggerExtensions
     {
-        /// <summary>
-        /// Adds a console logger named 'Console' to the factory.
-        /// </summary>
-        /// <param name="builder">The <see cref="ILoggingBuilder"/> to use.</param>
         public static ILoggingBuilder AddJsonConsole(this ILoggingBuilder builder)
         {
             builder.AddConfiguration();
@@ -24,11 +20,6 @@ namespace JetBlack.JsonConsoleLogger
             return builder;
         }
 
-        /// <summary>
-        /// Adds a console logger named 'Console' to the factory.
-        /// </summary>
-        /// <param name="builder">The <see cref="ILoggingBuilder"/> to use.</param>
-        /// <param name="configure"></param>
         public static ILoggingBuilder AddJsonConsole(this ILoggingBuilder builder, Action<JsonConsoleLoggerOptions> configure)
         {
             if (configure == null)

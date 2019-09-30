@@ -12,7 +12,7 @@ namespace Example
         static void Main(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
             var loggerFactory = LoggerFactory.Create(builder =>

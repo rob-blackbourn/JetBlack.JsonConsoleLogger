@@ -79,7 +79,7 @@ namespace JetBlack.JsonConsoleLogger
                 if (logEntry.TimeStamp != null)
                     body[logEntry.Options.GetName(Names.Timestamp)] = logEntry.TimeStamp;
                 if (logEntry.Scopes != null)
-                    body[logEntry.Options.GetName(Names.Scopes)] = logEntry.TimeStamp;
+                    body[logEntry.Options.GetName(Names.Scopes)] = logEntry.Scopes;
 
                 var message = JsonConvert.SerializeObject(body);
 
