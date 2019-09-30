@@ -12,7 +12,7 @@ namespace JetBlack.JsonConsoleLogger
             string? timeStamp,
             string levelString,
             IDictionary<string, object> parameters,
-            IDictionary<string, object?>? exception,
+            object? exception,
             IList<string>? scopes,
             JsonConsoleLoggerOptions? options)
         {
@@ -31,7 +31,7 @@ namespace JetBlack.JsonConsoleLogger
         public readonly string LevelString;
         public readonly string Message;
         public readonly IDictionary<string, object>? Parameters;
-        public readonly IDictionary<string, object?>? Exception;
+        public readonly object? Exception;
         public readonly IList<string>? Scopes;
         public readonly JsonConsoleLoggerOptions? Options;
     }

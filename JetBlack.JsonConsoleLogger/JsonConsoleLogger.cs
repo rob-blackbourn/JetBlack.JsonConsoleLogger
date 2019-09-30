@@ -115,17 +115,39 @@ namespace JetBlack.JsonConsoleLogger
                 .ToDictionary(x => x.Key, x => x.Value);
         }
 
-        private Dictionary<string, object?>? GetExceptionDetails(Exception? exception)
+        private object? GetExceptionDetails(Exception? exception)
         {
-            if (exception == null)
+            if (exception == null || Options?.LogExceptions == false)
                 return null;
 
-            return new Dictionary<string, object?>
+            if (Options?.FlattenExceptions == true)
             {
-                { Options.GetName(Names.ExceptionMessage), exception.Message },
-                { Options.GetName(Names.StackTrace), GetStackTrace(exception) },
-                { Options.GetName(Names.InnerException), GetExceptionDetails(exception.InnerException) }
-            };
+                var exceptions = new List<IDictionary<string, object?>>();
+                do
+                {
+                    exceptions.Add(
+                        new Dictionary<string, object?>
+                        {
+                            { Options.GetName(Names.ExceptionMessage), exception.Message },
+                            { Options.GetName(Names.StackTrace), GetStackTrace(exception) },
+                        }
+                    );
+
+                    exception = exception.InnerException;
+                }
+                while (exception != null);
+
+                return exceptions;
+            }
+            else
+            {
+                return new Dictionary<string, object?>
+                {
+                    { Options.GetName(Names.ExceptionMessage), exception.Message },
+                    { Options.GetName(Names.StackTrace), GetStackTrace(exception) },
+                    { Options.GetName(Names.InnerException), GetExceptionDetails(exception.InnerException) }
+                };
+            }
         }
 
         private Dictionary<string, object>[] GetStackTrace(Exception exception)
