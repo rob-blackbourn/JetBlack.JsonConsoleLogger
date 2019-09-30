@@ -50,7 +50,19 @@ namespace JetBlack.JsonConsoleLogger
             catch (Exception) { }
         }
 
-        internal virtual void WriteMessage(LogEntry logEntry)
+        internal void WriteMessage(LogEntry logEntry)
+        {
+            try
+            {
+                TryWriteMessage(logEntry, true);
+            }
+            catch
+            {
+                TryWriteMessage(logEntry, false);
+            }
+        }
+
+        internal void TryWriteMessage(LogEntry logEntry, bool includeParameters)
         {
             var console = logEntry.Options?.LogToStdErr == true ? ErrorConsole : Console;
 
@@ -58,9 +70,14 @@ namespace JetBlack.JsonConsoleLogger
             {
                 { logEntry.Options.GetName(Names.Name), logEntry.Name},
                 { logEntry.Options.GetName(Names.Level), logEntry.LevelString},
-                { logEntry.Options.GetName(Names.Message), logEntry.Message},
-                { logEntry.Options.GetName(Names.Parameters), logEntry.Parameters},
+                { logEntry.Options.GetName(Names.Message), logEntry.Message}
             };
+
+            if (includeParameters)
+                body[logEntry.Options.GetName(Names.Parameters)] = logEntry.Parameters;
+            else
+                body[logEntry.Options.GetName(Names.Parameters)] = "failed to write parameters";
+
             if (logEntry.Exception != null)
                 body[logEntry.Options.GetName(Names.Exception)] = logEntry.Exception;
             if (logEntry.TimeStamp != null)
