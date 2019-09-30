@@ -63,11 +63,10 @@ namespace JetBlack.JsonConsoleLogger
                 { "parameters", logMessageEntry.Parameters},
                 { "exception", logMessageEntry.Exception}
             };
-            var message = JsonConvert.SerializeObject(body);
-
-
             if (logMessageEntry.TimeStamp != null)
                 body["timestamp"] = logMessageEntry.TimeStamp;
+
+            var message = JsonConvert.SerializeObject(body);
 
             console?.WriteLine(message);
             console?.Flush();

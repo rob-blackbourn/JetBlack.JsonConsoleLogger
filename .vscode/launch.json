@@ -9,9 +9,9 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build Example",
-      "program": "${workspaceFolder}/examples/bin/Debug/netcoreapp3.0/Example.dll",
+      "program": "${workspaceFolder}/examples/simple/bin/Debug/netcoreapp3.0/Example.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/examples",
+      "cwd": "${workspaceFolder}/examples/simple",
       "console": "integratedTerminal",
       "stopAtEntry": false,
       "justMyCode": false
