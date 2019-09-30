@@ -109,11 +109,8 @@ Here is an example:
     },
     "JsonConsole":
     {
-      "IncludeScopes": true,
       "Timestamp": "utc",
       "logToStdErr": true,
-      "logExceptions": false,
-      "flattenExceptions": true,
       "names": {
         "name": "logName",
         "level": "logLevel",
