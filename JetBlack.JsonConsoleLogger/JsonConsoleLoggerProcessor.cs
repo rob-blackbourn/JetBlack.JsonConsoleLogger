@@ -62,7 +62,7 @@ namespace JetBlack.JsonConsoleLogger
             }
         }
 
-        internal void TryWriteMessage(LogEntry logEntry, bool includeParameters)
+        private void TryWriteMessage(LogEntry logEntry, bool includeParameters)
         {
             var console = logEntry.Options?.LogToStdErr == true ? ErrorConsole : Console;
 
