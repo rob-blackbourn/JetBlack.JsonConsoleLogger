@@ -63,11 +63,11 @@ namespace JetBlack.JsonConsoleLogger
                 var console = logEntry.Options?.LogToStdErr == true ? ErrorConsole : Console;
 
                 var body = new Dictionary<string, object?>
-            {
-                { logEntry.Options.GetName(Names.Name), logEntry.Name},
-                { logEntry.Options.GetName(Names.Level), logEntry.LevelString},
-                { logEntry.Options.GetName(Names.Message), logEntry.Message}
-            };
+                {
+                    { logEntry.Options.GetName(Names.Name), logEntry.Name},
+                    { logEntry.Options.GetName(Names.Level), logEntry.LevelString},
+                    { logEntry.Options.GetName(Names.Message), logEntry.Message}
+                };
 
                 if (includeParameters)
                     body[logEntry.Options.GetName(Names.Parameters)] = logEntry.Parameters;
