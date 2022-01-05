@@ -17,7 +17,7 @@ namespace JetBlack.JsonConsoleLogger
         {
         }
 
-        IDisposable IExternalScopeProvider.Push(object state)
+        IDisposable IExternalScopeProvider.Push(object? state)
         {
             return NullScope.Instance;
         }
