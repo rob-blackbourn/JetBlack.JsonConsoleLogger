@@ -28,7 +28,7 @@ namespace JetBlack.JsonConsoleLogger
         internal IExternalScopeProvider? ScopeProvider { get; set; }
         internal JsonConsoleLoggerOptions? Options { get; set; }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             if (!IsEnabled(logLevel))
                 return;
@@ -44,13 +44,13 @@ namespace JetBlack.JsonConsoleLogger
                 WriteMessage(logLevel, _name, eventId.Id, message, parameters, exception);
         }
 
-        public virtual void WriteMessage(LogLevel logLevel, string logName, int eventId, string message, IDictionary<string, object> parameters, Exception exception)
+        public virtual void WriteMessage(LogLevel logLevel, string logName, int eventId, string message, IDictionary<string, object> parameters, Exception? exception)
         {
             var entry = CreateDefaultLogMessage(logLevel, logName, eventId, message, parameters, exception);
             _queueProcessor.EnqueueMessage(entry);
         }
 
-        private LogEntry CreateDefaultLogMessage(LogLevel logLevel, string logName, int eventId, string message, IDictionary<string, object> parameters, Exception exception)
+        private LogEntry CreateDefaultLogMessage(LogLevel logLevel, string logName, int eventId, string message, IDictionary<string, object> parameters, Exception? exception)
         {
             var logLevelString = GetLogLevelString(logLevel);
             var scopes = GetScopeInformation();
